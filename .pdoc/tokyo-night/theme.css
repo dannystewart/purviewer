@@ -1,0 +1,160 @@
+:root {
+    --pdoc-background: #16161E;
+    --mono-fonts: 'JetBrains Mono', Consolas, Menlo, Monaco, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.pdoc {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
+    --text: #c0caf5;
+    --muted: #a9b1d6;
+    --link: #7aa2f7;
+    --link-hover: #c0caf5;
+    --code: #1A1B26;
+    --active: #292E42;
+
+    --accent: #24283B;
+    --accent2: #292E42;
+
+    --nav-hover: rgba(0, 0, 0, 0.1);
+    --name: #c0caf5;
+    --def: #BB9AF7;
+    --annotation: #BB9AF7;
+}
+
+.pdoc h1 {
+    font-size: 2.2em;
+    font-weight: 600 !important;
+}
+
+.pdoc h2 {
+    font-size: 1.7em;
+    font-weight: 500 !important;
+}
+
+.pdoc h3 {
+    font-size: 1.35em;
+    font-weight: 500 !important;
+    line-height: 1.6;
+    margin-top: -0.1em !important;
+    margin-bottom: 0 !important;
+}
+
+.pdoc h1::after,
+.pdoc h2::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #30374b;
+    margin-top: 0.2em;
+    margin-bottom: -0.1em;
+}
+
+.pdoc a.class::before,
+.pdoc a.class {
+    font-family: var(--mono-fonts);
+    font-feature-settings: "calt" 1, "ss01" 1;
+    font-weight: 500 !important;
+    color: #bb9af7 !important;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+}
+
+.pdoc a.class {
+    font-size: 0.9em;
+    font-weight: 500 !important;
+    color: #C0CAF5 !important;
+}
+
+.pdoc a.variable,
+.pdoc a.function {
+    font-family: var(--mono-fonts);
+    font-feature-settings: "calt" 1, "ss01" 1;
+    font-size: 0.9em;
+    font-weight: 400 !important;
+    color: #C0CAF5;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+}
+
+.pdoc a.function {
+    color: #7aa2f7;
+}
+
+.pdoc a.function::after {
+    font-family: var(--mono-fonts);
+    font-feature-settings: "calt" 1, "ss01" 1;
+    font-size: 0.9em;
+    color: #a9b1d6;
+    letter-spacing: -0.02em;
+}
+
+.pdoc ul.memberlist {
+    font-size: 0.95em;
+    font-weight: 300 !important;
+}
+
+.pdoc ul.memberlist::before {
+    font-size: 0.95em;
+    font-weight: 300 !important;
+}
+
+.pdoc span.def,
+.pdoc span.name {
+    font-weight: 500 !important;
+}
+
+.pdoc span.name {
+    color: #7aa2f7;
+}
+
+.pdoc div.attr.variable span.name {
+    color: #C0CAF5;
+}
+
+.pdoc span.default_value {
+    color: #9ece6a;
+}
+
+.pdoc span.return_annotation {
+    font-family: var(--mono-fonts);
+    font-feature-settings: "calt" 1, "ss01" 1;
+}
+
+#arguments,
+#returns {
+    color: #7aa2f7;
+}
+
+#arguments::after,
+#returns::after {
+    content: "";
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, #30374b 0%, #30374b 50%, transparent 100%);
+    margin-top: 0.15em;
+}
+
+.pdoc input {
+    background-color: #1A1B26;
+    border: 1px solid #414868;
+    color: #a9b1d6;
+    border-radius: 6px;
+    padding: 4px 10px;
+    transition: all 0.2s ease;
+}
+
+.pdoc code,
+.pdoc pre,
+.pdoc-code {
+    font-family: var(--mono-fonts);
+    font-feature-settings: "calt" 1, "ss01" 1;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+.pdoc div a.attribution {
+    visibility: hidden;
+}
