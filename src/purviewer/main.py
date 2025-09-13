@@ -1,5 +1,8 @@
-#!/usr/bin/env python3
+# Copyright (c) 2025 Danny Stewart
+# Licensed under the MIT License
+
 # type: ignore[reportAssignmentType]
+
 """Analyze SharePoint file actions taken based on a CSV audit log export from Microsoft 365."""
 
 from __future__ import annotations

@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Audit log analyzer for Microsoft Purview"
 authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.13"
 packages = [{ include = "purviewer", from = "src" }]
 dependencies = [

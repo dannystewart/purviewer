@@ -96,3 +96,7 @@ pip install purviewer
 - Microsoft Purview audit log CSV export
 
 The tool automatically detects SharePoint domains and email domains from your audit data, making it work seamlessly with any Microsoft 365 tenant.
+
+## License
+
+Purviewer is released under the MIT License. See the LICENSE file for details.

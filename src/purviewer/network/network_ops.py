@@ -1,4 +1,8 @@
+# Copyright (c) 2025 Danny Stewart
+# Licensed under the MIT License
+
 # type: ignore[reportAssignmentType]
+
 from __future__ import annotations
 
 import fnmatch
