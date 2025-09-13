@@ -1,7 +1,7 @@
 # Copyright (c) 2025 Danny Stewart
 # Licensed under the MIT License
 
-"""A powerful command-line tool for analyzing Microsoft Purview audit logs. Extract insights from SharePoint, OneDrive, and Exchange activity with comprehensive filtering, security analysis, and detailed reporting.
+"""A powerful command-line tool for analyzing Microsoft Purview audit logs and Entra sign-ins. Extract insights from SharePoint, OneDrive, Exchange activity, and user authentication with comprehensive filtering, security analysis, and detailed reporting.
 
 ## Features
 
@@ -41,6 +41,14 @@
 - **Action Types**: Focus on specific operations (downloads, uploads, etc.)
 - **File Keywords**: Search for files containing specific keywords
 - **IP Filtering**: Include or exclude specific IP addresses with wildcard support
+
+### Sign-in Analysis (from Entra ID logs)
+
+- **Authentication Tracking**: Analyze user sign-ins from Microsoft Entra audit logs
+- **Failure Detection**: Identify failed sign-ins and authentication errors
+- **Device Analysis**: Track device types, operating systems, and client applications
+- **Location Monitoring**: Analyze sign-in locations and IP addresses
+- **Security Insights**: Detect unusual sign-in patterns and potential security issues
 
 ## Usage
 
@@ -83,6 +91,15 @@ purviewer audit_log.csv --users-list users.csv
 
 # Show detailed analysis
 purviewer audit_log.csv --details
+
+# Analyze sign-in data
+purviewer signin_data.csv --entra
+
+# Filter sign-ins by user or text
+purviewer signin_data.csv --entra --signin-filter "admin"
+
+# Exclude certain sign-ins and limit results
+purviewer signin_data.csv --entra --signin-exclude "success" --signin-limit 10
 ```
 
 ## Installation
@@ -97,6 +114,8 @@ pip install purviewer
 - Microsoft Purview audit log CSV export
 
 The tool automatically detects SharePoint domains and email domains from your audit data, making it work seamlessly with any Microsoft 365 tenant.
+
+**Important Note**: The sign-ins analysis feature uses a different data source than the main Purview analysis. While most features analyze data from Microsoft Purview audit logs (SharePoint, OneDrive, Exchange), the `--entra` feature specifically requires a CSV export from Microsoft Entra ID's sign-in logs. These are two separate data sources with different formats and column structures.
 
 ## License
 

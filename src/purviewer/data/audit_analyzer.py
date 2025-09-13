@@ -101,3 +101,41 @@ class AuditConfig:
             "platforms": [],  # Known good platforms
         }
     )
+
+    # Sign-in analysis settings from Entra ID
+    entra_columns: dict[str, dict[str, Any]] = field(
+        default_factory=lambda: {
+            "User agent": {"skip_value": None},
+            "User": {"skip_value": None},
+            "Username": {"skip_value": None},
+            "Application": {"skip_value": None},
+            "Resource": {"skip_value": "None"},
+            "IP address": {"skip_value": None},
+            "Location": {"skip_value": None},
+            "Status": {"skip_value": None},
+            "Sign-in error code": {"skip_value": "None"},
+            "Failure reason": {"skip_value": "Other."},
+            "Client app": {"skip_value": None},
+            "Device ID": {"skip_value": None},
+            "Browser": {"skip_value": None},
+            "Operating System": {"skip_value": None},
+            "Managed": {"skip_value": None},
+            "Join Type": {"skip_value": "None"},
+            "Multifactor authentication result": {"skip_value": "None"},
+        }
+    )
+
+    # Columns that should only be shown if a failure is detected
+    entra_failures_only: dict[str, dict[str, Any]] = field(
+        default_factory=lambda: {
+            "Status": {"fail_value": "Failure"},
+            "Sign-in error code": {
+                "fail_value": "None",
+                "invert": True,
+            },  # Show if not "None"
+            "Failure reason": {
+                "fail_value": "Other",
+                "invert": True,
+            },  # Show if not "Other"
+        }
+    )

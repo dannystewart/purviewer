@@ -20,6 +20,7 @@ from polykit.cli import PolyArgs, halo_progress
 from polykit.text import color, print_color
 
 from purviewer.data import AuditConfig, OutputFormatter
+from purviewer.entra import EntraSignInOperations
 from purviewer.exchange import ExchangeOperations
 from purviewer.files import FileOperations
 from purviewer.network import NetworkOperations
@@ -29,7 +30,7 @@ if TYPE_CHECKING:
     import argparse
 
 # Set up the logger
-logger = PolyLog.get_logger("purviewer", simple=True)
+logger = PolyLog.get_logger(simple=True)
 
 # Load runtime config
 config = AuditConfig()
@@ -45,6 +46,7 @@ with halo_progress(
     network = NetworkOperations(config, out, logger)
     files = FileOperations(config, out, logger, users)
     exchange = ExchangeOperations(config, out, logger)
+    entra = EntraSignInOperations(config, out, logger)
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -53,7 +55,7 @@ def parse_arguments() -> argparse.Namespace:
         description="Analyze SharePoint and Exchange actions based on Purview audit logs.",
         arg_width=40,
     )
-    parser.add_argument("log_file", help="CSV audit log exported from Purview")
+    parser.add_argument("log_file", help="CSV audit log from Purview (or Entra ID for --entra")
     parser.add_argument(
         "--actions", type=str, help="specific actions to analyze, comma-separated (default: all)"
     )
@@ -104,6 +106,20 @@ def parse_arguments() -> argparse.Namespace:
         type=str,
         metavar="FILE",
         help="export Exchange activity to specified CSV file",
+    )
+    parser.add_argument(
+        "--entra",
+        action="store_true",
+        help="analyze sign-in data from an Entra ID CSV audit log",
+    )
+    parser.add_argument(
+        "--signin-filter", type=str, help="filter sign-ins by specified text (case-insensitive)"
+    )
+    parser.add_argument("--signin-limit", type=int, help="limit rows shown for each sign-in column")
+    parser.add_argument(
+        "--signin-exclude",
+        type=str,
+        help="exclude sign-ins with specified text (case-insensitive)",
     )
 
     return parser.parse_args()
@@ -384,6 +400,19 @@ def perform_early_operations(
     args: argparse.Namespace, file_actions: DataFrame, exch_events: DataFrame
 ) -> bool:
     """Perform early operations based on the command-line arguments."""
+    if args.entra:
+        try:
+            entra.process_entra_csv(
+                args.log_file,
+                filter_text=args.signin_filter,
+                exclude_text=args.signin_exclude,
+                limit=args.signin_limit,
+            )
+        except ValueError as e:
+            logger.error("Sign-in analysis failed: %s", str(e))
+            return True
+        return True
+
     if args.with_lookups:
         network.analyze_ip_addresses_with_lookup(file_actions)
         return True
@@ -400,10 +429,6 @@ def perform_early_operations(
         exchange.generate_exchange_activity_csv(exch_events, args.exchange_csv)
         if not args.exchange:
             return True
-
-    if args.exchange:
-        exchange.generate_exchange_activity_table(exch_events)
-        return True
 
     if args.exchange:
         exchange.generate_exchange_activity_table(exch_events)
