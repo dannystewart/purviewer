@@ -1,0 +1,208 @@
+# Ruff config version: 23
+# -----------------------
+
+# Files and directories to exclude
+exclude = [
+    "__pypackages__",
+    "_build",
+    ".eggs",
+    ".git",
+    ".mypy_cache",
+    ".pyenv",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    ".vscode",
+    "build",
+    "dist",
+    "site-packages",
+    "tests",
+    "venv",
+]
+
+# Line length and indentation settings
+line-length = 100
+indent-width = 4
+
+# Target Python 3.12
+target-version = "py312"
+
+# Allow unsafe fixes
+unsafe-fixes = true
+
+[format]
+# Use double quotes for strings
+quote-style = "double"
+
+# Indent with spaces, rather than tabs
+indent-style = "space"
+
+# Respect magic trailing commas
+skip-magic-trailing-comma = false
+
+# Enable auto-formatting of code examples in docstrings
+docstring-code-format = true
+
+# Set the line length limit for code snippets in docstrings
+docstring-code-line-length = "dynamic"
+
+[lint]
+select = [
+    "A",    # flake8-builtins
+    "ANN",  # flake8-annotations
+    "ARG",  # flake8-unused-arguments
+    "B",    # flake8-bugbear
+    "C",    # pylint convention
+    "C4",   # flake8-comprehensions
+    "COM",  # flake8-commas
+    "D",    # pydocstyle
+    "DOC",  # pydoclint
+    "DTZ",  # flake8-datetimez
+    "E",    # pycodestyle errors
+    "EM",   # flake8-errmsg
+    "F",    # pyflakes
+    "FA",   # flake8-future-annotations
+    "FURB", # refurb
+    "G001", # Logging statement uses str.format
+    "G003", # Logging statement uses +
+    "G004", # Logging statement uses f-strings
+    "G010", # Logging statement uses warn instead of warning
+    "G201", # Logging uses exc_info=True instead of .exception
+    "G202", # Logging statement has redundant exc_info
+    "INP",  # flake8-no-pep420
+    "INT",  # flake8-gettext
+    "ISC",  # flake8-implicit-str-concat
+    "LOG",  # flake8-logging
+    "N",    # pep8-naming
+    "PERF", # perflint
+    "PIE",  # flake8-pie
+    "PL",   # pylint
+    "PTH",  # flake8-use-pathlib
+    "Q",    # flake8-quotes
+    "R",    # pylint refactor
+    "RET",  # flake8-return
+    "RSE",  # flake8-raise
+    "RUF",  # Ruff-specific rules
+    "SIM",  # flake8-simplify
+    "SLF",  # flake8-self
+    "T20",  # flake8-print
+    "TC",   # flake8-type-checking
+    "TD",   # flake8-todos
+    "TID",  # flake8-tidy-imports
+    "UP",   # pyupgrade
+    "W",    # pylint warnings
+]
+ignore = [
+    "A005",    # Module is shadowing a Python built-in
+    "ANN001",  # Missing type annotation for 'self'
+    "ANN002",  # Missing type annotation for 'cls'
+    "ANN204",  # Missing return type annotation for init
+    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
+    "B010",    # 'No docstring in module/class/method'
+    "COM812",  # Trailing comma missing
+    "COM819",  # Trailing comma prohibited (redundant with Ruff formatter)
+    "DOC201",  # Return is not documented in docstring
+    "DOC402",  # Yield is not documented in docstring
+    "D100",    # Missing docstring in public module
+    "D104",    # Missing docstring in public package
+    "D105",    # Missing docstring in magic method
+    "D107",    # Missing docstring in init
+    "D201",    # 'No blank lines allowed before function docstring'
+    "D202",    # Blank lines after function definition
+    "D203",    # 1 blank line required before class docstring
+    "D204",    # 1 blank line required after class docstring
+    "D205",    # 1 blank line required between summary line and description
+    "D206",    # Docstring should be indented with spaces not tabs
+    "D300",    # Triple single quotes (redundant with Ruff formatter)
+    "D400",    # First line should end with a period
+    "D406",    # Section name should end with a newline
+    "D407",    # Missing dashed underline after section
+    "D413",    # Missing blank line after last section
+    "E111",    # Indentation with invalid multiple (redundant with Ruff formatter)
+    "E114",    # Indentation with invalid multiple comment (redundant with Ruff formatter)
+    "E117",    # Over-indented (redundant with Ruff formatter)
+    "E261",    # At least two spaces before inline comment (formatter fixes this)
+    "E303",    # Too many blank lines (formatter fixes this)
+    "E501",    # Line too long
+    "ISC001",  # Single-line implicit string concatenation (redundant with Ruff formatter)
+    "ISC002",  # Multi-line  implicit string concatenation (redundant with Ruff formatter)
+    "PLC0415", # `import` should be at the top-level of a file
+    "PLR0904", # Too many public methods
+    "PLR0911", # Too many return statements
+    "PLR0913", # Too many arguments
+    "PLR0914", # Too many local variables
+    "PLR0916", # Too many boolean expressions
+    "PLR0917", # Too many positional arguments
+    "PLR2004", # Magic value used in comparison, consider replacing with a constant variable
+    "PLR6301", # Unused `self` means it could be a static method (this is very unreliable)
+    "PLW1641", # Object does not implement `__hash__` method
+    "PLW2901", # `for` loop variable overwritten by assignment target
+    "Q000",    # Bad quotes inline string (redundant with Ruff formatter)
+    "Q001",    # Bad quotes multiline string (redundant with Ruff formatter)
+    "Q002",    # Bad quotes docstring (redundant with Ruff formatter)
+    "Q003",    # Avoidable escaped quote (redundant with Ruff formatter)
+    "RET502",  # Do not implicitly return None in function able to return non-None value
+    "RET503",  # Missing explicit return at the end of function able to return non-None value
+    "RUF001",  # String contains ambiguous `’`
+    "RUF100",  # Unused `noqa` directive (it's really bad at detecting what's actually unused)
+    "T201",    # No print statements
+    "TD001",   # Invalid TODO format
+    "TD002",   # Missing author in TODO
+    "TD003",   # Missing issue link on the line following this TODO
+    "W191",    # Tab indentation (redundant with Ruff formatter)
+    "W291",    # Trailing whitespace
+    "W293",    # Blank line contains whitespace
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided
+fixable = ["ALL"]
+
+# Prevent removing unused variables and auto-adding self to classes
+unfixable = ["F841", "N805"]
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401"] # Imported but unused module-level import
+
+# Sphinx config (shadowing built-in, missing import, implicit namespace package)
+"conf.py" = [
+    "A001",
+    "I002",
+    "INP001",
+]
+
+[lint.flake8-annotations]
+allow-star-arg-any = true
+mypy-init-return = true
+suppress-none-returning = true
+
+[lint.flake8-implicit-str-concat]
+allow-multiline = false
+
+[lint.flake8-quotes]
+docstring-quotes = "double"
+
+[lint.isort]
+required-imports = ["from __future__ import annotations"]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "personal",
+    "first-party",
+    "local-folder",
+]
+
+[lint.isort.sections]
+personal = ["dsbin", "prism"]
+
+[lint.mccabe]
+max-complexity = 10
+
+[lint.pycodestyle]
+max-doc-length = 100
+
+[lint.pydocstyle]
+convention = "google"
