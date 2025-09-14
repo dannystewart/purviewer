@@ -49,6 +49,31 @@ A powerful command-line tool for analyzing Microsoft Purview audit logs and Entr
 - **Location Monitoring**: Analyze sign-in locations and IP addresses
 - **Security Insights**: Detect unusual sign-in patterns and potential security issues
 
+## Arguments
+
+```text
+  --actions ACTIONS                     specific actions to analyze, comma-separated (default: all)
+  --list LIST                           print list of filenames containing keyword
+  --file FILE                           show actions performed on files containing keyword
+  --user USER                           filter actions by specific user
+  --users-list FILE                     optional CSV with user mappings (UPN, display name)
+  --start-date START_DATE               start date for analysis (YYYY-MM-DD)
+  --end-date END_DATE                   end date for analysis (YYYY-MM-DD)
+  --sort-by {filename,username,date}    sort results by filename, username, or date (default: date)
+  --details                             show detailed file lists in operation summaries
+  --ips IPS                             filter by individual IPs (comma-separated, supports wildcards)
+  --exclude-ips EXCLUDE_IPS             exclude specific IPs (comma-separated, supports wildcards)
+  --with-lookups                        perform detailed IP lookups (takes several seconds per IP)
+  --timeline                            print a full timeline of file access
+  --urls                                export full URLs of accessed files
+  --exchange                            output only Exchange activity in table format
+  --exchange-csv FILE                   export Exchange activity to specified CSV file
+  --entra                               analyze sign-in data from an Entra ID CSV audit log
+  --signin-filter SIGNIN_FILTER         filter sign-ins by specified text (case-insensitive)
+  --signin-limit SIGNIN_LIMIT           limit rows shown for each sign-in column
+  --signin-exclude SIGNIN_EXCLUDE       exclude sign-ins with specified text (case-insensitive)
+```
+
 ## Usage
 
 ```bash
