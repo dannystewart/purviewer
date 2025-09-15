@@ -400,19 +400,6 @@ def perform_early_operations(
     args: argparse.Namespace, file_actions: DataFrame, exch_events: DataFrame
 ) -> bool:
     """Perform early operations based on the command-line arguments."""
-    if args.entra:
-        try:
-            entra.process_entra_csv(
-                args.log_file,
-                filter_text=args.signin_filter,
-                exclude_text=args.signin_exclude,
-                limit=args.signin_limit,
-            )
-        except ValueError as e:
-            logger.error("Sign-in analysis failed: %s", str(e))
-            return True
-        return True
-
     if args.with_lookups:
         network.analyze_ip_addresses_with_lookup(file_actions)
         return True
@@ -469,6 +456,19 @@ def main() -> None:
 
     log_file = Path(args.log_file)
     print(color("Using log file: ", "green") + str(log_file))
+
+    # Handle Entra sign-in analysis early, before trying to process as SharePoint audit log
+    if args.entra:
+        try:
+            entra.process_entra_csv(
+                args.log_file,
+                filter_text=args.signin_filter,
+                exclude_text=args.signin_exclude,
+                limit=args.signin_limit,
+            )
+        except ValueError as e:
+            logger.error("Sign-in analysis failed: %s", str(e))
+        return
 
     try:
         df: DataFrame = prepare_dataframe(log_file)
