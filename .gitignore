@@ -141,3 +141,8 @@ cython_debug/
 # Other files
 .sync.ffs_db
 .DS_Store
+
+# Ignore common file types for analysis
+*.csv
+*.txt
+*.xlsx
