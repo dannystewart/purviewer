@@ -35,8 +35,6 @@ class AuditConfig:
     email_domain: str | None = None
 
     # File settings and data
-    default_log_file: str = "logs/log.csv"
-    output_directory: str = "output"
     excluded_file_types: list[str] = field(
         default_factory=lambda: [
             ".aspx",
