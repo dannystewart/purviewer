@@ -1,6 +1,6 @@
 [project]
 name = "purviewer"
-version = "0.3.1"
+version = "0.3.2.dev0"
 description = "Audit log analyzer for Microsoft Purview"
 authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
 readme = "README.md"
