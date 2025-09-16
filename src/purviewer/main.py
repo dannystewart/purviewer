@@ -19,11 +19,11 @@ from polykit import PolyLog, Text
 from polykit.cli import PolyArgs
 from polykit.text import color, print_color
 
-from purviewer.data import AuditConfig, OutputFormatter
 from purviewer.entra import EntraSignInOperations
 from purviewer.exchange import ExchangeOperations
 from purviewer.files import FileOperations
 from purviewer.network import NetworkOperations
+from purviewer.tools import AuditConfig, OutputFormatter
 from purviewer.users import UserActions
 
 if TYPE_CHECKING:

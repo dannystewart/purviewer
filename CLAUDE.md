@@ -11,13 +11,11 @@ Purviewer is a command-line tool for analyzing Microsoft Purview audit logs, spe
 The codebase is organized into functional modules under `src/purviewer/`:
 
 - **main.py**: Entry point with CLI argument parsing, data preparation, and orchestration
-- **data/**: Core configuration and base classes
-  - `audit_analyzer.py`: Base classes (`AuditAnalyzer`, `AuditConfig`) for all analysis modules
-  - `output_formatter.py`: Centralized output formatting and display utilities
 - **files/**: SharePoint and OneDrive file operations analysis
 - **exchange/**: Exchange/Outlook activity analysis
 - **users/**: User activity tracking and mapping
 - **network/**: IP address and network security analysis
+- `tools.py`: Base classes (`AuditAnalyzer`, `AuditConfig`) for all analysis modules and `OutputFormatter` for formatting
 
 Each analysis module inherits from `AuditAnalyzer` and uses the shared `OutputFormatter` for consistent output.
 
