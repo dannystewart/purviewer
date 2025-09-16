@@ -437,12 +437,6 @@ def execute_selected_operations(
     args: argparse.Namespace, file_actions: DataFrame, actions_to_analyze: list[str]
 ) -> None:
     """Run the requested operations based on the command-line arguments."""
-    if args.start_date:
-        file_actions = file_actions[file_actions["CreationDate"] >= pd.to_datetime(args.start_date)]
-
-    if args.end_date:
-        file_actions = file_actions[file_actions["CreationDate"] <= pd.to_datetime(args.end_date)]
-
     if args.timeline:
         files.print_timeline(file_actions)
         return
@@ -548,8 +542,15 @@ def main() -> None:
     except pd.errors.ParserError:
         return
 
-    # Print the date range
-    out.print_date_range(df)
+    # Apply date filtering if specified
+    original_df = df.copy()
+    if args.start_date:
+        df = df[df["CreationDate"] >= pd.to_datetime(args.start_date)]
+    if args.end_date:
+        df = df[df["CreationDate"] <= pd.to_datetime(args.end_date)]
+
+    # Print the date range as well as any filtering that was applied
+    out.print_date_range(original_df, df if (args.start_date or args.end_date) else None)
 
     # Apply IP filtering if specified
     df = apply_ip_filtering(args, df)
