@@ -84,54 +84,56 @@
 
 ## Usage
 
+### Full Comprehensive Analysis
+
 ```bash
-# Basic analysis
+# Analyze all file operations from a Purview audit log
 purviewer audit_log.csv
 
-# Filter by specific actions
-purviewer audit_log.csv --actions "FileDownloaded,FileUploaded"
+# Analyze Entra ID sign-in data
+purviewer signin_data.csv --entra
+```
 
-# Analyze specific user
-purviewer audit_log.csv --user "john.doe@company.com"
+### Common Workflows
 
-# Filter by date range
-purviewer audit_log.csv --start-date "2025-01-01" --end-date "2025-01-31"
+#### Security Investigation
 
-# Search for files containing keyword
-purviewer audit_log.csv --list-actions-for-files "confidential"
+```bash
+# Look for suspicious bulk downloads
+purviewer audit_log.csv --actions "FileDownloaded" --details
 
-# Export Exchange activity to CSV
-purviewer audit_log.csv --export-exchange-csv exchange_activity.csv
-
-# Generate timeline view
-purviewer audit_log.csv --timeline
-
-# Export file URLs
-purviewer audit_log.csv --full-urls
-
-# IP analysis with geolocation lookup
+# Analyze IP addresses with geolocation
 purviewer audit_log.csv --do-ip-lookups
 
-# Filter by IP addresses
-purviewer audit_log.csv --ips "192.168.1.*,10.0.0.0/8"
+# Check specific user's activity
+purviewer audit_log.csv --user "john.doe@company.com" --timeline
+```
 
-# Exclude specific IPs
-purviewer audit_log.csv --exclude-ips "192.168.1.100"
+#### File Discovery
 
-# Use user mapping file
-purviewer audit_log.csv --user-map users.csv
+```bash
+# Find files containing sensitive keywords
+purviewer audit_log.csv --list-actions-for-files "confidential"
 
-# Show detailed analysis
-purviewer audit_log.csv --details
+# Export all accessed file URLs
+purviewer audit_log.csv --full-urls
+```
 
-# Analyze sign-in data
-purviewer signin_data.csv --entra
+#### Exchange Analysis
 
-# Filter sign-ins by user or text
-purviewer signin_data.csv --entra --filter "admin"
+```bash
+# Focus on email activity only
+purviewer audit_log.csv --exchange
 
-# Exclude certain sign-ins and limit results
-purviewer signin_data.csv --entra --exclude "success" --limit 10
+# Export Exchange data for further analysis
+purviewer audit_log.csv --export-exchange-csv email_activity.csv
+```
+
+#### Sign-in Analysis
+
+```bash
+# Filter sign-ins by specific criteria
+purviewer signin_data.csv --entra --filter "admin" --exclude "success"
 ```
 
 ## Installation
