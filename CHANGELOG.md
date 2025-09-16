@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.3.1] (2025-09-16)
+
+### Fixed
+
+- Fixes positional argument casing for the CSV log file to ensure it's consistent everywhere.
+
 ## [0.3.0] (2025-09-15)
 
 ### Changed
@@ -44,7 +50,8 @@ Initial release.
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/purviewer/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/dannystewart/purviewer/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/dannystewart/purviewer/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/dannystewart/purviewer/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/dannystewart/purviewer/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/dannystewart/purviewer/compare/v0.1.0...v0.2.0
