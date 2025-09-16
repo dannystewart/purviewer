@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING, Any
 import pandas as pd
 from pandas import DataFrame
 from polykit import PolyLog, Text
-from polykit.cli import PolyArgs, halo_progress
+from polykit.cli import PolyArgs
 from polykit.text import color, print_color
 
 from purviewer.data import AuditConfig, OutputFormatter
@@ -36,17 +36,12 @@ logger = PolyLog.get_logger(simple=True)
 config = AuditConfig()
 
 # Create the output formatter and analyzers
-with halo_progress(
-    start_message="Importing data...",
-    end_message=None,
-    fail_message="Failed to import data",
-):
-    out = OutputFormatter(config, logger)
-    users = UserActions(config, out, logger)
-    network = NetworkOperations(config, out, logger)
-    files = FileOperations(config, out, logger, users)
-    exchange = ExchangeOperations(config, out, logger)
-    entra = EntraSignInOperations(config, out, logger)
+out = OutputFormatter(config, logger)
+users = UserActions(config, out, logger)
+network = NetworkOperations(config, out, logger)
+files = FileOperations(config, out, logger, users)
+exchange = ExchangeOperations(config, out, logger)
+entra = EntraSignInOperations(config, out, logger)
 
 
 def parse_arguments() -> argparse.Namespace:
