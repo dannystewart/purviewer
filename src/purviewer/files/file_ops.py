@@ -200,21 +200,19 @@ class FileOperations(AuditAnalyzer):
         for _, group in groups:
             if len(group) > 5:
                 timestamp = group["CreationDate"].iloc[0].strftime("%Y-%m-%d %H:%M:%S")
-                print(f"{' ' * 6}At {color(timestamp, 'cyan')}:")
 
-                if show_details:
-                    # Create a list of files with their paths
+                if show_details:  # Create a list of files with their paths and show full hierarchy
                     files_with_paths = []
                     for _, row in group.iterrows():
                         filename = row["SourceFileName"]
                         path = row.get("CleanPath", "")
                         files_with_paths.append((filename, path))
-
-                    # Use hierarchical display
+                    print(f"{' ' * 6}At {color(timestamp, 'cyan')}:")
                     print(self.format_hierarchical_file_list(files_with_paths))
-                else:
-                    # Just show the count
-                    print(f"{' ' * 8}{color(str(len(group)), 'yellow')} files")
+                else:  # Otherwise, show the count on the same line as the timestamp
+                    print(
+                        f"{' ' * 6}At {color(timestamp, 'cyan')}: {color(str(len(group)), 'yellow')} files"
+                    )
 
     def format_file_list(
         self,
