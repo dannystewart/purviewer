@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Removes the initial loading spinner for cleaner output when piping to a file.
 
+### Fixed
+
+- Updates module references to be consistent across all files.
+
 ## [0.3.1] (2025-09-16)
 
 ### Fixed

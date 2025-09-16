@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any
 
 from polykit.text import color, print_color
 
-from purviewer.data import AuditAnalyzer
+from purviewer.tools import AuditAnalyzer
 
 if TYPE_CHECKING:
     from polykit.text.types import TextColor

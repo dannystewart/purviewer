@@ -13,7 +13,7 @@ import iplooker.ip_looker as iplooker
 from polykit.text import color
 from polykit.text import print_color as printc
 
-from purviewer.data import AuditAnalyzer
+from purviewer.tools import AuditAnalyzer
 
 if TYPE_CHECKING:
     from pandas import DataFrame

@@ -15,7 +15,7 @@ from polykit.text import color
 from polykit.text import print_color as printc
 from tabulate import tabulate
 
-from purviewer.data import AuditAnalyzer
+from purviewer.tools import AuditAnalyzer
 
 if TYPE_CHECKING:
     import numpy as np
