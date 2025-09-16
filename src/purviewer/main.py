@@ -359,6 +359,16 @@ def _handle_onedrive_path(object_id: str) -> str:
             user_and_path = parts[1].split("/", 1)
             username = user_and_path[0]
 
+            # Try to convert underscores in the OneDrive path back to an email address
+            if "_" in username and config.email_domain:
+                domain_with_underscores = config.email_domain.replace(".", "_")
+                if username.endswith(domain_with_underscores):
+                    # Trim the underscored domain and replace with @ + domain
+                    username = (
+                        username[: -len(domain_with_underscores) - 1] + "@" + config.email_domain
+                    )
+                # If we can't confidently identify the domain, leave it as is
+
             # Extract the full folder structure after username
             if len(user_and_path) > 1:
                 return f"OneDrive ≫ {username}/{user_and_path[1]}"
