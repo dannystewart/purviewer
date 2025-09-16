@@ -55,74 +55,141 @@ def parse_arguments() -> argparse.Namespace:
         description="Analyze SharePoint and Exchange actions based on Purview audit logs.",
         arg_width=40,
     )
-    parser.add_argument("log_file", help="CSV audit log from Purview (or Entra ID for --entra")
-    parser.add_argument(
-        "--actions", type=str, help="specific actions to analyze, comma-separated (default: all)"
+
+    # Positional argument for the audit CSV file
+    parser.add_argument("LOG_CSV", help="CSV audit log from Purview (or Entra ID for --entra)")
+
+    # SharePoint/Exchange analysis mode from Purview audit log
+    purview_group = parser.add_argument_group(
+        "PURVIEW LOG ANALYSIS",
+        "For SharePoint and Exchange (requires export from Purview audit search)",
     )
-    parser.add_argument("--list", type=str, help="print list of filenames containing keyword")
-    parser.add_argument(
-        "--file", type=str, default="", help="show actions performed on files containing keyword"
-    )
-    parser.add_argument("--user", type=str, help="filter actions by specific user")
-    parser.add_argument(
-        "--users-list",
+    purview_group.add_argument(
+        "--actions",
         type=str,
-        metavar="FILE",
-        help="optional CSV with user mappings (UPN, display name)",
+        help="specific actions to analyze, comma-separated",
     )
-    parser.add_argument("--start-date", type=str, help="start date for analysis (YYYY-MM-DD)")
-    parser.add_argument("--end-date", type=str, help="end date for analysis (YYYY-MM-DD)")
-    parser.add_argument(
+    purview_group.add_argument(
+        "--list-files",
+        type=str,
+        help="list filenames containing keyword",
+        metavar="KEYWORD",
+    )
+    purview_group.add_argument(
+        "--list-actions-for-files",
+        type=str,
+        default="",
+        help="list actions performed on files by keyword",
+        metavar="KEYWORD",
+    )
+    purview_group.add_argument(
+        "--user",
+        type=str,
+        help="filter actions by specific user",
+        metavar="USERNAME",
+    )
+    purview_group.add_argument(
+        "--user-map",
+        type=str,
+        help="optional M365 user export CSV (UPN, display name)",
+        metavar="USER_MAP_CSV",
+    )
+    purview_group.add_argument(
+        "--start-date",
+        type=str,
+        help="start date for analysis (YYYY-MM-DD)",
+    )
+    purview_group.add_argument(
+        "--end-date",
+        type=str,
+        help="end date for analysis (YYYY-MM-DD)",
+    )
+    purview_group.add_argument(
         "--sort-by",
         choices=["filename", "username", "date"],
         default="date",
         help="sort results by filename, username, or date (default: date)",
     )
-    parser.add_argument(
+    purview_group.add_argument(
         "--details",
         action="store_true",
         help="show detailed file lists in operation summaries",
     )
-    parser.add_argument(
-        "--ips", type=str, help="filter by individual IPs (comma-separated, supports wildcards)"
-    )
-    parser.add_argument(
-        "--exclude-ips", type=str, help="exclude specific IPs (comma-separated, supports wildcards)"
-    )
-    parser.add_argument(
-        "--with-lookups",
-        action="store_true",
-        help="perform detailed IP lookups (takes several seconds per IP)",
-    )
-    parser.add_argument(
-        "--timeline", action="store_true", help="print a full timeline of file access"
-    )
-    parser.add_argument("--urls", action="store_true", help="export full URLs of accessed files")
-    parser.add_argument(
-        "--exchange", action="store_true", help="output only Exchange activity in table format"
-    )
-    parser.add_argument(
-        "--exchange-csv",
+    purview_group.add_argument(
+        "--ips",
         type=str,
-        metavar="FILE",
+        help="filter by individual IPs (comma-separated, supports wildcards)",
+    )
+    purview_group.add_argument(
+        "--exclude-ips",
+        type=str,
+        help="exclude specific IPs (comma-separated, supports wildcards)",
+        metavar="IPS",
+    )
+    purview_group.add_argument(
+        "--do-ip-lookups",
+        action="store_true",
+        help="perform IP geolocation lookups (takes a few seconds per IP)",
+    )
+    purview_group.add_argument(
+        "--timeline",
+        action="store_true",
+        help="print a full timeline of file access events",
+    )
+    purview_group.add_argument(
+        "--full-urls",
+        action="store_true",
+        help="print full URLs of accessed files",
+    )
+    purview_group.add_argument(
+        "--exchange",
+        action="store_true",
+        help="output only Exchange activity in table format",
+    )
+    purview_group.add_argument(
+        "--export-exchange-csv",
+        type=str,
+        metavar="OUTPUT_FILE",
         help="export Exchange activity to specified CSV file",
     )
-    parser.add_argument(
+
+    # Entra ID sign-in analysis mode from Entra ID audit log
+    entra_group = parser.add_argument_group(
+        "ENTRA SIGN-IN ANALYSIS",
+        "For user sign-in analysis (requires export from Entra ID sign-in logs)",
+    )
+    entra_group.add_argument(
         "--entra",
         action="store_true",
         help="analyze sign-in data from an Entra ID CSV audit log",
     )
-    parser.add_argument(
-        "--signin-filter", type=str, help="filter sign-ins by specified text (case-insensitive)"
+    entra_group.add_argument(
+        "--filter",
+        type=str,
+        help="filter sign-ins by specified text (case-insensitive)",
+        metavar="FILTER_TEXT",
     )
-    parser.add_argument("--signin-limit", type=int, help="limit rows shown for each sign-in column")
-    parser.add_argument(
-        "--signin-exclude",
+    entra_group.add_argument(
+        "--exclude",
         type=str,
         help="exclude sign-ins with specified text (case-insensitive)",
+        metavar="EXCLUDE_TEXT",
+    )
+    entra_group.add_argument(
+        "--limit",
+        type=int,
+        help="limit rows shown for each sign-in column",
+        metavar="MAX_ROWS",
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    # Validate that sign-in options are only used with --entra
+    signin_options = [args.filter, args.exclude, args.limit]
+    if any(opt is not None for opt in signin_options) and not args.entra:
+        parser.error("Sign-in options (--filter, --exclude, --limit) can only be used with --entra")
+
+    return args
 
 
 def detect_sharepoint_domains(df: DataFrame) -> list[str]:
@@ -375,12 +442,12 @@ def execute_selected_operations(
         files.print_timeline(file_actions)
         return
 
-    if args.urls:
+    if args.full_urls:
         files.export_file_urls(file_actions)
         return
 
-    if args.list:
-        files.list_files_with_keyword(file_actions, args.list)
+    if args.list_files:
+        files.list_files_with_keyword(file_actions, args.list_files)
 
     elif args.user:
         user_actions = users.filter_by_user(args.user, file_actions)
@@ -388,19 +455,19 @@ def execute_selected_operations(
         print_color(f"\nActions for user {args.user} (total: {len(user_actions)})", "blue")
         users.get_grouped_actions(user_actions, actions_to_analyze, args.sort_by)
 
-    elif not args.file:
+    elif not args.list_actions_for_files:
         files.get_overall_statistics(file_actions, actions_to_analyze)
         files.get_most_actioned_files(file_actions, actions_to_analyze)
 
-    if args.file:
-        files.get_detailed_file_actions(file_actions, args.file)
+    if args.list_actions_for_files:
+        files.get_detailed_file_actions(file_actions, args.list_actions_for_files)
 
 
 def perform_early_operations(
     args: argparse.Namespace, file_actions: DataFrame, exch_events: DataFrame
 ) -> bool:
     """Perform early operations based on the command-line arguments."""
-    if args.with_lookups:
+    if args.do_ip_lookups:
         network.analyze_ip_addresses_with_lookup(file_actions)
         return True
 
@@ -408,12 +475,12 @@ def perform_early_operations(
         files.print_timeline(file_actions)
         return True
 
-    if args.urls:
+    if args.full_urls:
         files.export_file_urls(file_actions)
         return True
 
-    if args.exchange_csv:
-        exchange.generate_exchange_activity_csv(exch_events, args.exchange_csv)
+    if args.export_exchange_csv:
+        exchange.generate_exchange_activity_csv(exch_events, args.export_exchange_csv)
         if not args.exchange:
             return True
 
@@ -438,7 +505,7 @@ def perform_data_analysis(
     execute_selected_operations(args, file_actions, actions_to_analyze)
 
     # Run security analyses
-    if not args.file and not args.user:  # Only run for full analysis
+    if not args.list_actions_for_files and not args.user:  # Only run for full analysis
         network.analyze_ip_addresses(file_actions)
         network.analyze_user_agents(file_actions)
         files.analyze_accessed_paths(file_actions)
@@ -452,19 +519,16 @@ def main() -> None:
     # Parse command-line arguments
     args = parse_arguments()
 
-    config.user_mapping = users.create_user_mapping(args.users_list)
+    config.user_mapping = users.create_user_mapping(args.user_map)
 
-    log_file = Path(args.log_file)
+    log_file = Path(args.log_csv)
     print(color("Using log file: ", "green") + str(log_file))
 
     # Handle Entra sign-in analysis early, before trying to process as SharePoint audit log
     if args.entra:
         try:
             entra.process_entra_csv(
-                args.log_file,
-                filter_text=args.signin_filter,
-                exclude_text=args.signin_exclude,
-                limit=args.signin_limit,
+                args.log_csv, filter_text=args.filter, exclude_text=args.exclude, limit=args.limit
             )
         except ValueError as e:
             logger.error("Sign-in analysis failed: %s", str(e))

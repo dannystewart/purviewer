@@ -52,27 +52,34 @@
 
 ## Arguments
 
+### Purview Log Analysis for SharePoint and Exchange
+
 ```text
-  --actions ACTIONS                     specific actions to analyze, comma-separated (default: all)
-  --list LIST                           print list of filenames containing keyword
-  --file FILE                           show actions performed on files containing keyword
-  --user USER                           filter actions by specific user
-  --users-list FILE                     optional CSV with user mappings (UPN, display name)
-  --start-date START_DATE               start date for analysis (YYYY-MM-DD)
-  --end-date END_DATE                   end date for analysis (YYYY-MM-DD)
-  --sort-by {filename,username,date}    sort results by filename, username, or date (default: date)
-  --details                             show detailed file lists in operation summaries
-  --ips IPS                             filter by individual IPs (comma-separated, supports wildcards)
-  --exclude-ips EXCLUDE_IPS             exclude specific IPs (comma-separated, supports wildcards)
-  --with-lookups                        perform detailed IP lookups (takes several seconds per IP)
-  --timeline                            print a full timeline of file access
-  --urls                                export full URLs of accessed files
-  --exchange                            output only Exchange activity in table format
-  --exchange-csv FILE                   export Exchange activity to specified CSV file
-  --entra                               analyze sign-in data from an Entra ID CSV audit log
-  --signin-filter SIGNIN_FILTER         filter sign-ins by specified text (case-insensitive)
-  --signin-limit SIGNIN_LIMIT           limit rows shown for each sign-in column
-  --signin-exclude SIGNIN_EXCLUDE       exclude sign-ins with specified text (case-insensitive)
+--actions ACTIONS                     specific actions to analyze, comma-separated
+--list-files KEYWORD                  list filenames containing keyword
+--list-actions-for-files KEYWORD      list actions performed on files by keyword
+--user USERNAME                       filter actions by specific user
+--user-map USER_MAP_CSV               optional M365 user export CSV (UPN, display name)
+--start-date START_DATE               start date for analysis (YYYY-MM-DD)
+--end-date END_DATE                   end date for analysis (YYYY-MM-DD)
+--sort-by {filename,username,date}    sort results by filename, username, or date (default: date)
+--details                             show detailed file lists in operation summaries
+--ips IPS                             filter by individual IPs (comma-separated, supports wildcards)
+--exclude-ips IPS                     exclude specific IPs (comma-separated, supports wildcards)
+--do-ip-lookups                       perform IP geolocation lookups (takes a few seconds per IP)
+--timeline                            print a full timeline of file access events
+--full-urls                           print full URLs of accessed files
+--exchange                            output only Exchange activity in table format
+--export-exchange-csv OUTPUT_FILE     export Exchange activity to specified CSV file
+```
+
+### Entra ID Log Analysis for Sign-In Activity
+
+```text
+--entra                               analyze sign-in data from an Entra ID CSV audit log
+--filter FILTER_TEXT                  filter sign-ins by specified text (case-insensitive)
+--exclude EXCLUDE_TEXT                exclude sign-ins with specified text (case-insensitive)
+--limit MAX_ROWS                      limit rows shown for each sign-in column
 ```
 
 ## Usage
@@ -91,19 +98,19 @@ purviewer audit_log.csv --user "john.doe@company.com"
 purviewer audit_log.csv --start-date "2025-01-01" --end-date "2025-01-31"
 
 # Search for files containing keyword
-purviewer audit_log.csv --file "confidential"
+purviewer audit_log.csv --list-actions-for-files "confidential"
 
 # Export Exchange activity to CSV
-purviewer audit_log.csv --exchange-csv exchange_activity.csv
+purviewer audit_log.csv --export-exchange-csv exchange_activity.csv
 
 # Generate timeline view
 purviewer audit_log.csv --timeline
 
 # Export file URLs
-purviewer audit_log.csv --urls
+purviewer audit_log.csv --full-urls
 
 # IP analysis with geolocation lookup
-purviewer audit_log.csv --with-lookups
+purviewer audit_log.csv --do-ip-lookups
 
 # Filter by IP addresses
 purviewer audit_log.csv --ips "192.168.1.*,10.0.0.0/8"
@@ -112,7 +119,7 @@ purviewer audit_log.csv --ips "192.168.1.*,10.0.0.0/8"
 purviewer audit_log.csv --exclude-ips "192.168.1.100"
 
 # Use user mapping file
-purviewer audit_log.csv --users-list users.csv
+purviewer audit_log.csv --user-map users.csv
 
 # Show detailed analysis
 purviewer audit_log.csv --details
@@ -121,10 +128,10 @@ purviewer audit_log.csv --details
 purviewer signin_data.csv --entra
 
 # Filter sign-ins by user or text
-purviewer signin_data.csv --entra --signin-filter "admin"
+purviewer signin_data.csv --entra --filter "admin"
 
 # Exclude certain sign-ins and limit results
-purviewer signin_data.csv --entra --signin-exclude "success" --signin-limit 10
+purviewer signin_data.csv --entra --exclude "success" --limit 10
 ```
 
 ## Installation

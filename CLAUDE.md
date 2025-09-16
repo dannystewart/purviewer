@@ -55,10 +55,10 @@ purviewer audit_log.csv --actions "FileDownloaded,FileUploaded"
 purviewer audit_log.csv --user "john.doe@company.com"
 
 # Export Exchange activity to CSV
-purviewer audit_log.csv --exchange-csv exchange_activity.csv
+purviewer audit_log.csv --export-exchange-csv exchange_activity.csv
 
 # IP analysis with geolocation lookup
-purviewer audit_log.csv --with-lookups
+purviewer audit_log.csv --do-ip-lookups
 
 # Generate timeline view
 purviewer audit_log.csv --timeline
