@@ -57,7 +57,7 @@ def parse_arguments() -> argparse.Namespace:
     )
 
     # Positional argument for the audit CSV file
-    parser.add_argument("LOG_CSV", help="CSV audit log from Purview (or Entra ID for --entra)")
+    parser.add_argument("log_csv", help="CSV audit log from Purview (or Entra ID for --entra)")
 
     # SharePoint/Exchange analysis mode from Purview audit log
     purview_group = parser.add_argument_group(
