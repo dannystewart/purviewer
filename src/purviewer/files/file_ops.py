@@ -491,6 +491,10 @@ class FileOperations(AuditAnalyzer):
             if not path or not filename:
                 continue
 
+            # Skip paths that match excluded SharePoint paths
+            if self._should_exclude_path(path):
+                continue
+
             # Format groups based on location, full path, and filename
             path_groups = self._format_file_paths(path, filename, path_groups)
 
@@ -661,6 +665,10 @@ class FileOperations(AuditAnalyzer):
             if not path or not filename or not object_id:
                 continue
 
+            # Skip paths that match excluded SharePoint paths
+            if self._should_exclude_path(path):
+                continue
+
             # URL encode the object_id to make it clickable
             encoded_url = urllib.parse.quote(object_id, safe=":/")
 
@@ -692,3 +700,18 @@ class FileOperations(AuditAnalyzer):
                 sorted_urls = sorted(urls)
                 for url in sorted_urls:
                     printc(f"  {url}", "green")
+
+    def _should_exclude_path(self, path: str) -> bool:
+        """Check if a path should be excluded based on SharePoint system paths."""
+        if not path:
+            return False
+
+        # Check if the path starts with any excluded SharePoint paths
+        for excluded_path in self.config.excluded_sharepoint_paths:
+            if path.startswith(excluded_path):
+                self.logger.debug(
+                    "Excluding SharePoint path: %s (matches exclusion: %s)", path, excluded_path
+                )
+                return True
+
+        return False

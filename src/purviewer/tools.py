@@ -54,6 +54,16 @@ class AuditConfig:
             ".themedjpg",
         ]
     )
+    # SharePoint paths to exclude from analysis (internal/system paths)
+    excluded_sharepoint_paths: list[str] = field(
+        default_factory=lambda: [
+            "_api",
+            "_catalogs",
+            "_layouts",
+            "_vti_bin",
+            "Style Library",
+        ]
+    )
     user_mapping: dict[str, str] = field(default_factory=dict)
     max_users: int = 20
     max_files: int = 20
