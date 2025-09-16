@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Improves OneDrive path display by converting underscored usernames back to proper email addresses when a domain is configured, falling back gracefully to the original format when domain conversion cannot be confidently applied.
 
+### Removed
+
+- Removes the initial loading spinner for cleaner output when piping to a file.
+
 ## [0.3.1] (2025-09-16)
 
 ### Fixed
