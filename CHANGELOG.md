@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 ### Changed
 
 - Improves OneDrive path display by converting underscored usernames back to proper email addresses when a domain is configured, falling back gracefully to the original format when domain conversion cannot be confidently applied.
+- Now displays filtered date range separately from the full log range to be clearer about what subset of data is being analyzed.
+- Consolidates data module into tools module to simplify project structure.
 
 ### Removed
 
