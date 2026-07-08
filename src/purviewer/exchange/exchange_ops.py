@@ -908,8 +908,13 @@ class ExchangeOperations(AuditAnalyzer):
                             "Operation": str(operation),
                             "Subject": item.get("Subject", "No subject"),
                             "Folder": item.get("FolderPath", "Unknown folder"),
-                            "ClientIP": str(row.get("ClientIP", "")),
-                            "ClientApp": self._extract_client(str(row.get("ClientInfoString", ""))),
+                            "Message ID": item.get("InternetMessageId", ""),
+                            "Attachments": item.get("Attachments", ""),
+                            "Client IP": str(row.get("ClientIP", "")),
+                            "Client Info": str(row.get("ClientInfoString", "")),
+                            "Client App": self._extract_client(
+                                str(row.get("ClientInfoString", ""))
+                            ),
                         }
                         csv_data.append(csv_row)
             else:
@@ -935,11 +940,12 @@ class ExchangeOperations(AuditAnalyzer):
             "Attachments",
             "Client IP",
             "Client Info",
+            "Client App",
         ]
 
         # Write to CSV
         try:
-            with Path(output_file).open("w", newline="", encoding="utf-8") as csvfile:
+            with Path(output_file).open("w", newline="", encoding="utf-8-sig") as csvfile:
                 writer = csv.DictWriter(csvfile, fieldnames=headers)
                 writer.writeheader()
                 writer.writerows(csv_data)
@@ -965,6 +971,7 @@ class ExchangeOperations(AuditAnalyzer):
             "Attachments": "",
             "Client IP": row.get("ClientIP", ""),
             "Client Info": row.get("ClientInfoString", ""),
+            "Client App": self._extract_client(str(row.get("ClientInfoString", ""))),
         }
 
         # Extract additional details from AuditData
@@ -975,6 +982,7 @@ class ExchangeOperations(AuditAnalyzer):
         # Update client info if available in audit data
         csv_row["Client IP"] = audit_data.get("ClientIPAddress", csv_row["Client IP"])
         csv_row["Client Info"] = audit_data.get("ClientInfoString", csv_row["Client Info"])
+        csv_row["Client App"] = self._extract_client(str(csv_row["Client Info"]))
 
         # Handle different operation types
         if "Item" in audit_data and isinstance(audit_data["Item"], dict):

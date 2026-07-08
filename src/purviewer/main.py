@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import csv
 import json
 import operator
 import re
@@ -274,6 +275,8 @@ def load_csv_data(log_file: Path) -> DataFrame:
     """
     try:
         df: DataFrame = pd.read_csv(log_file)
+        if df.empty:
+            df = recover_single_row_purview_export(log_file, df)
     except FileNotFoundError:
         logger.error("Error: File '%s' not found.", log_file)
         raise
@@ -284,6 +287,53 @@ def load_csv_data(log_file: Path) -> DataFrame:
         logger.error("Error: Unable to parse '%s'. Make sure it's a valid CSV file.", log_file)
         raise
     return df
+
+
+def recover_single_row_purview_export(log_file: Path, df: DataFrame) -> DataFrame:
+    """Recover Purview exports that contain every record on the header row."""
+    columns = list(df.columns)
+    expected_columns = [
+        "RecordId",
+        "CreationDate",
+        "RecordType",
+        "Operation",
+        "UserId",
+        "AuditData",
+        "AssociatedAdminUnits",
+    ]
+    glued_header = "AssociatedAdminUnitsNames "
+
+    if columns[:7] != expected_columns or len(columns) < 14:
+        return df
+
+    first_data_field = str(columns[7])
+    if not first_data_field.startswith(glued_header):
+        return df
+
+    with log_file.open(newline="", encoding="utf-8-sig") as file:
+        rows = list(csv.reader(file))
+
+    if len(rows) != 1:
+        return df
+
+    fields = rows[0]
+    data_fields = [first_data_field.removeprefix(glued_header), *fields[8:]]
+    if data_fields and data_fields[-1] == "":
+        data_fields = data_fields[:-1]
+
+    record_width = len(expected_columns)
+    if len(data_fields) % record_width != 0:
+        return df
+
+    records = [
+        data_fields[index : index + record_width]
+        for index in range(0, len(data_fields), record_width)
+    ]
+    logger.warning(
+        "Detected single-row Purview export; recovered %d audit records.",
+        len(records),
+    )
+    return pd.DataFrame(records, columns=expected_columns)
 
 
 def extract_basic_fields(df: DataFrame) -> DataFrame:
@@ -304,6 +354,10 @@ def extract_basic_fields(df: DataFrame) -> DataFrame:
 
 def extract_path_information(df: DataFrame) -> DataFrame:
     """Extract and clean path information from URLs."""
+    if df.empty:
+        df["CleanPath"] = pd.Series(dtype="object")
+        return df
+
     df["CleanPath"] = df.apply(clean_path, axis=1)
     return df
 
